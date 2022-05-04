@@ -14,6 +14,7 @@ import {
   Paper,
   Select,
   SelectChangeEvent,
+  Snackbar,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -40,8 +41,14 @@ const AppView = () => {
   const fruitContainers = useRecoilValue(fruitContainersState);
   const totalEarnings = useRecoilValue(totalEarningsState);
 
+  const [showSnackbar, setShowSnackbar] = useState(false);
+
   const onAddFruitButtonClick = () => {
-    setFruits(fruits.concat(selectedFruit));
+    if (fruits.length < settings.containers * settings.fruitsPerContainer)
+      setFruits(fruits.concat(selectedFruit));
+    else {
+      setShowSnackbar(true);
+    }
   };
 
   const onSellFruitButtonClick = () => {
@@ -64,6 +71,13 @@ const AppView = () => {
 
   return (
     <>
+      <Snackbar
+        open={showSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setShowSnackbar(false)}
+        message="Elements limit reached!"
+      />
+
       <Grid container minHeight="100vh" sx={{ background: blueGrey[50] }}>
         <Container>
           <Grid
